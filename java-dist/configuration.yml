@@ -1,4 +1,4 @@
-name: beakerx-kernel-java
+name: beakerx_kernel_java
 channels:
   - conda-forge
 dependencies:
