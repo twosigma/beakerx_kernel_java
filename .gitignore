@@ -13,4 +13,4 @@ __pycache__/
 *.egg-info/
 
 java-dist/dist
-java-dist/beakerx/kernel/*
+java-dist/beakerx_java/kernel/*
