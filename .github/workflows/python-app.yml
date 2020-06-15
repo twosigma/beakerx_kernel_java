@@ -25,7 +25,7 @@ jobs:
         path: beakerx_kernel_base
     - name: Build BeakerX Kernel Base
       run: |
-        pushd $GITHUB_WORKSPACE/beakerx_base
+        pushd $GITHUB_WORKSPACE/beakerx_kernel_base
         ./gradlew install
         popd
     - name: Build conda package
