@@ -20,6 +20,20 @@ jobs:
         java-version: 1.11
     - name: Set up Conda
       uses: s-weigand/setup-conda@v1
+    - name: Cache gradle
+      uses: actions/cache@v2
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+    - name: Cache Conda
+      uses: actions/cache@v1
+      with:
+        path: ~/.conda
+        key: ${{ runner.os }}-conda-${{ hashFiles('**/configuration.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-conda-          
     - name: Verify conda version
       run: conda --version
     - name: Checkout beakerx_kernel_base repo
@@ -29,20 +43,18 @@ jobs:
         path: beakerx_kernel_base
     - name: Build BeakerX Kernel Base
       run: |
-        pushd $GITHUB_WORKSPACE/beakerx_kernel_base
+        cd $GITHUB_WORKSPACE/beakerx_kernel_base
         chmod +x gradlew
         ./gradlew install
-        popd
     - name: Update conda package
       run: |
-        pushd ./java-dist
+        cd java-dist
         conda env update -f configuration.yml
-        popd ..
     - name: Build BeakerX Java Kernel
       run: |
         chmod +x gradlew
-        pushd ./java-dist
+        cd java-dist
         conda activate beakerx_kernel_java
         pip install -r requirements.txt --verbose
         beakerx_kernel_java install
-        popd ..
+
