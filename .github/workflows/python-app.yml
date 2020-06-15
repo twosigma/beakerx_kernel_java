@@ -18,5 +18,11 @@ jobs:
       uses: s-weigand/setup-conda@v1
     - run: conda --version
     - run: which python
-    - run: ls
+    - run: |
+        cd ./java-dist
+        conda env create -n beakerx -f configuration.yml
+        conda activate beakerx
+        (pip install -r requirements.txt --verbose)
+        beakerx_kernel_java install
+        cd ..
 
