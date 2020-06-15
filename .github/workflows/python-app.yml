@@ -14,6 +14,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Set up JDK 1.11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.11
     - name: Set up Conda
       uses: s-weigand/setup-conda@v1
     - name: Verify conda version
@@ -26,10 +30,12 @@ jobs:
     - name: Build BeakerX Kernel Base
       run: |
         pushd $GITHUB_WORKSPACE/beakerx_kernel_base
+        chmod +x gradlew
         ./gradlew install
         popd
     - name: Build conda package
       run: |
+        chmod +x gradlew
         pushd ./java-dist
         conda env update -f configuration.yml
         (pip install -r requirements.txt --verbose)
