@@ -33,12 +33,16 @@ jobs:
         chmod +x gradlew
         ./gradlew install
         popd
-    - name: Build conda package
+    - name: Update conda package
+      run: |
+        pushd ./java-dist
+        conda env update -f configuration.yml
+        popd ..
+    - name: Build BeakerX Java Kernel
       run: |
         chmod +x gradlew
         pushd ./java-dist
-        conda env update -f configuration.yml
-        (pip install -r requirements.txt --verbose)
+        conda activate beakerx_kernel_java
+        pip install -r requirements.txt --verbose
         beakerx_kernel_java install
         popd ..
-
