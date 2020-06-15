@@ -18,7 +18,15 @@ jobs:
       uses: s-weigand/setup-conda@v1
     - run: conda --version
     - run: which python
+    - name: Checkout tools repo
+      uses: actions/checkout@v2
+      with:
+        repository: twosigma/beakerx_base
+        path: beakerx_base
     - run: |
+        cd ./beakerx_base
+        ./gradlew install
+        cd ..
         cd ./java-dist
         conda env update -f configuration.yml
         (pip install -r requirements.txt --verbose)
