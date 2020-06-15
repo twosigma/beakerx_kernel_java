@@ -20,8 +20,7 @@ jobs:
     - run: which python
     - run: |
         cd ./java-dist
-        conda env create -n beakerx -f configuration.yml
-        conda activate beakerx
+        conda env update -f configuration.yml
         (pip install -r requirements.txt --verbose)
         beakerx_kernel_java install
         cd ..
