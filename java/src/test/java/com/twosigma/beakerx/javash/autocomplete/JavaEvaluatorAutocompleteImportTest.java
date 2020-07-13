@@ -17,6 +17,7 @@ package com.twosigma.beakerx.javash.autocomplete;
 
 import com.twosigma.beakerx.autocomplete.JVMEvaluatorAutocompleteImportTest;
 import com.twosigma.beakerx.evaluator.BaseEvaluator;
+import com.twosigma.beakerx.evaluator.BxInspectMock;
 import com.twosigma.beakerx.evaluator.ClasspathScannerMock;
 import com.twosigma.beakerx.evaluator.EvaluatorTest;
 import com.twosigma.beakerx.evaluator.MagicCommandAutocompletePatternsMock;
@@ -48,7 +49,8 @@ public class JavaEvaluatorAutocompleteImportTest extends JVMEvaluatorAutocomplet
             kernelParameters,
             new EvaluatorTest.BeakexClientTestImpl(),
             new MagicCommandAutocompletePatternsMock(),
-            new ClasspathScannerMock()
+            new ClasspathScannerMock(),
+            new BxInspectMock()
     );
   }
 

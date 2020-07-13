@@ -20,6 +20,7 @@ import com.twosigma.beakerx.BeakerXServerMock;
 import com.twosigma.beakerx.KernelExecutionTest;
 import com.twosigma.beakerx.KernelTest;
 import com.twosigma.beakerx.RuntimetoolsMock;
+import com.twosigma.beakerx.evaluator.BxInspectMock;
 import com.twosigma.beakerx.evaluator.ClasspathScannerMock;
 import com.twosigma.beakerx.evaluator.EvaluatorTest;
 import com.twosigma.beakerx.javash.evaluator.EvaluationObjectFactoryMock;
@@ -54,7 +55,8 @@ public class Java11KernelTest extends KernelExecutionTest {
             KERNEL_PARAMETERS,
             new EvaluatorTest.BeakexClientTestImpl(),
             magicCommandConfiguration.patterns(),
-            new ClasspathScannerMock()
+            new ClasspathScannerMock(),
+            new BxInspectMock()
     );
     return new Java(sessionId,
             evaluator,

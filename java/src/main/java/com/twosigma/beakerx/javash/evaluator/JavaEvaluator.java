@@ -24,10 +24,10 @@ import com.twosigma.beakerx.evaluator.ClasspathScanner;
 import com.twosigma.beakerx.evaluator.JobDescriptor;
 import com.twosigma.beakerx.evaluator.TempFolderFactory;
 import com.twosigma.beakerx.evaluator.TempFolderFactoryImpl;
+import com.twosigma.beakerx.inspect.Inspect;
 import com.twosigma.beakerx.javash.JavaBeakerXUrlClassLoader;
 import com.twosigma.beakerx.javash.autocomplete.JavaAutocomplete;
 import com.twosigma.beakerx.jvm.object.EvaluationObject;
-import com.twosigma.beakerx.jvm.object.SimpleEvaluationObject;
 import com.twosigma.beakerx.jvm.threads.BeakerCellExecutor;
 import com.twosigma.beakerx.jvm.threads.CellExecutor;
 import com.twosigma.beakerx.kernel.EvaluatorParameters;
@@ -55,8 +55,17 @@ public class JavaEvaluator extends BaseEvaluator {
                        EvaluatorParameters evaluatorParameters,
                        BeakerXClient beakerxClient,
                        MagicCommandAutocompletePatterns autocompletePatterns,
-                       ClasspathScanner classpathScanner) {
-    this(id, sId, new BeakerCellExecutor("java`"), new TempFolderFactoryImpl(), evaluatorParameters, beakerxClient, autocompletePatterns, classpathScanner);
+                       ClasspathScanner classpathScanner,
+                       Inspect inspect) {
+    this(id,
+            sId,
+            new BeakerCellExecutor("java`"),
+            new TempFolderFactoryImpl(),
+            evaluatorParameters,
+            beakerxClient,
+            autocompletePatterns,
+            classpathScanner,
+            inspect);
   }
 
   public JavaEvaluator(String id,
@@ -66,8 +75,17 @@ public class JavaEvaluator extends BaseEvaluator {
                        EvaluatorParameters evaluatorParameters,
                        BeakerXClient beakerxClient,
                        MagicCommandAutocompletePatterns autocompletePatterns,
-                       ClasspathScanner classpathScanner) {
-    super(id, sId, cellExecutor, tempFolderFactory, evaluatorParameters, beakerxClient, autocompletePatterns, classpathScanner);
+                       ClasspathScanner classpathScanner,
+                       Inspect inspect) {
+    super(id,
+            sId,
+            cellExecutor,
+            tempFolderFactory,
+            evaluatorParameters,
+            beakerxClient,
+            autocompletePatterns,
+            classpathScanner,
+            inspect);
     loader = newClassLoader();
     jac = createJavaAutocomplete();
     this.jshell = newJShell();
