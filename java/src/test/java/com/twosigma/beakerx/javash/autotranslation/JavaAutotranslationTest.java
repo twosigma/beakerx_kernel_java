@@ -23,6 +23,7 @@ import com.twosigma.beakerx.KernelSetUpFixtureTest;
 import com.twosigma.beakerx.KernelTest;
 import com.twosigma.beakerx.NamespaceClient;
 import com.twosigma.beakerx.RuntimetoolsMock;
+import com.twosigma.beakerx.evaluator.BxInspectMock;
 import com.twosigma.beakerx.evaluator.ClasspathScannerMock;
 import com.twosigma.beakerx.javash.evaluator.JavaEvaluator;
 import com.twosigma.beakerx.javash.evaluator.MagicCommandConfigurationMock;
@@ -73,7 +74,8 @@ public class JavaAutotranslationTest extends KernelSetUpFixtureTest {
             getKernelParameters(),
             nc,
             magicCommandConfiguration.patterns(),
-            new ClasspathScannerMock());
+            new ClasspathScannerMock(),
+            new BxInspectMock());
     return new Java(sessionId,
             evaluator,
             new Configuration(
