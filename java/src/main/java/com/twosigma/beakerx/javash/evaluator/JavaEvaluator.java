@@ -36,7 +36,9 @@ import com.twosigma.beakerx.kernel.ImportPath;
 import com.twosigma.beakerx.kernel.PathToJar;
 import jdk.jshell.JShell;
 import jdk.jshell.SourceCodeAnalysis;
+import jdk.jshell.execution.LoaderDelegate;
 
+import java.net.URLClassLoader;
 import java.util.concurrent.Executors;
 
 import static com.twosigma.beakerx.BeakerXClientManager.BEAKER_X_CLIENT_MANAGER;
@@ -45,7 +47,7 @@ public class JavaEvaluator extends BaseEvaluator {
 
 
   private JavaAutocomplete jac;
-  private JavaBeakerXUrlClassLoader loader = null;
+  private URLClassLoader loader = null;
   private JShell jshell;
   private SourceCodeAnalysis sourceCodeAnalysis;
   private BeakerxLocalExecutionControl executionControl;
@@ -86,9 +88,9 @@ public class JavaEvaluator extends BaseEvaluator {
             autocompletePatterns,
             classpathScanner,
             inspect);
-    loader = newClassLoader();
+    JavaBeakerXUrlClassLoader javaClassLoader= newClassLoader();
     jac = createJavaAutocomplete();
-    this.jshell = newJShell();
+    this.jshell = newJShell(javaClassLoader);
     this.sourceCodeAnalysis = this.jshell.sourceCodeAnalysis();
   }
 
@@ -107,8 +109,8 @@ public class JavaEvaluator extends BaseEvaluator {
 
   @Override
   protected void doResetEnvironment() {
-    loader = newClassLoader();
-    this.jshell = newJShell();
+    JavaBeakerXUrlClassLoader javaClassLoader = newClassLoader();
+    this.jshell = newJShell(javaClassLoader);
     this.sourceCodeAnalysis = this.jshell.sourceCodeAnalysis();
     jac = createJavaAutocomplete();
     executorService.shutdown();
@@ -118,7 +120,7 @@ public class JavaEvaluator extends BaseEvaluator {
   @Override
   protected void addJarToClassLoader(PathToJar pathToJar) {
     this.jshell.addToClasspath(pathToJar.getPath());
-    loader.addJar(pathToJar);
+    getJavaClassLoader().addJar(pathToJar);
   }
 
   @Override
@@ -164,13 +166,16 @@ public class JavaEvaluator extends BaseEvaluator {
   }
 
   public JavaBeakerXUrlClassLoader getJavaClassLoader() {
-    return loader;
+    return (JavaBeakerXUrlClassLoader)loader.getParent();
   }
 
-  private JShell newJShell() {
-    this.executionControl = new BeakerxLocalExecutionControl();
+  private JShell newJShell(JavaBeakerXUrlClassLoader loader) {
+    BxLoaderDelegate loaderDelegate = new BxLoaderDelegate(loader);
+    this.loader = loaderDelegate.getLoader();
+    this.executionControl = new BeakerxLocalExecutionControl(loaderDelegate);
     JShell shell = JShell.builder()
             .executionEngine(new BeakerxLocalExecutionControlProvider(executionControl), null)
+            .compilerOptions()
             .build();
     for (ImportPath ip : getImports().getImportPaths()) {
       addImportToClassLoader(ip.asString(), shell);
