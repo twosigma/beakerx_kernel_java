@@ -37,6 +37,11 @@ public class JavaBeakerXUrlClassLoader extends URLClassLoader {
     javaURLClassLoader.addJar(pathToJar);
   }
 
+  @Override
+  public void addURL(URL url) {
+    super.addURL(url);
+  }
+
   public void addJar(PathToJar pathToJar) {
     javaURLClassLoader.addJar(pathToJar);
   }

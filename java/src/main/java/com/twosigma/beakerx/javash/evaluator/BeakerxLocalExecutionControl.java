@@ -16,6 +16,7 @@
 package com.twosigma.beakerx.javash.evaluator;
 
 import jdk.jshell.execution.DirectExecutionControl;
+import jdk.jshell.execution.LoaderDelegate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -35,6 +36,9 @@ public class BeakerxLocalExecutionControl extends DirectExecutionControl {
   private ThreadGroup execThreadGroup;
   private final Map<String, Object> objects = new ConcurrentHashMap<>();
 
+  public BeakerxLocalExecutionControl(LoaderDelegate loaderDelegate) {
+    super(loaderDelegate);
+  }
 
   public Object getObject(String uuid) {
     return objects.remove(uuid);
