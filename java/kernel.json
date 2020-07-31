@@ -4,5 +4,6 @@
   ],
   "display_name": "Java11",
   "language": "java",
-  "env": { "PS1":"java>"}
+  "env": { "PS1":"java>"},
+  "interrupt_mode": "message"
 }
