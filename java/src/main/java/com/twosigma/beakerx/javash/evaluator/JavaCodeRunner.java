@@ -18,7 +18,6 @@ package com.twosigma.beakerx.javash.evaluator;
 import com.twosigma.beakerx.TryResult;
 import com.twosigma.beakerx.evaluator.JobDescriptor;
 import com.twosigma.beakerx.jvm.object.EvaluationObject;
-
 import jdk.jshell.Diag;
 import jdk.jshell.Snippet;
 import jdk.jshell.SnippetEvent;
@@ -26,8 +25,6 @@ import jdk.jshell.SourceCodeAnalysis.CompletionInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -56,18 +53,11 @@ class JavaCodeRunner implements Callable<TryResult> {
       theOutput.setOutputHandler();
       either = runCode(j);
     } catch (Throwable e) {
-      if ((e instanceof InterruptedException) || (e instanceof ThreadDeath)) {
-        either = TryResult.createError(INTERUPTED_MSG);
-      } else {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-        either = TryResult.createError(sw.toString());
-      }
+      either = handleError(e);
     } finally {
       theOutput.clrOutputHandler();
     }
-    return either;
+    return javaEvaluator.processResult(either);
   }
 
 
@@ -87,7 +77,15 @@ class JavaCodeRunner implements Callable<TryResult> {
         info = analyze(info.remaining());
       }
       return TryResult.createResult(getResult(snippetsList.get(0)));
-    } catch (Exception e) {
+    } catch (Throwable e) {
+      return handleError(e);
+    }
+  }
+
+  private TryResult handleError(Throwable e) {
+    if (e instanceof InterruptedException || e instanceof ThreadDeath) {
+      return TryResult.createError(INTERUPTED_MSG);
+    } else {
       return TryResult.createError(e.getMessage());
     }
   }
